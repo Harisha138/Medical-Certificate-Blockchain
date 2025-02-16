@@ -1,91 +1,101 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const RegisterPage = () => {
-  const [role, setRole] = useState('patient'); // Default role is patient
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [licenseNumber, setLicenseNumber] = useState(''); // For doctors only
-  const [specialization, setSpecialization] = useState(''); // For doctors only
-  const [hospital, setHospital] = useState(''); // For doctors only
+const RegisterPage = ({ onRegister }) => {
+  const [formData, setFormData] = useState({
+    role: 'patient',
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    licenseNumber: '', // For doctors only
+  });
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name) newErrors.name = 'Name is required';
+    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email address';
+    if (!formData.password || formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    if (formData.role === 'doctor' && !formData.licenseNumber) newErrors.licenseNumber = 'License number is required for doctors';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulate registration based on role
-    alert(`Registered as ${role}: ${name}`);
-    console.log({ name, email, password, role, licenseNumber, specialization, hospital });
+    if (validateForm()) {
+      onRegister(formData); // Notify App.js of new user
+      navigate('/login');
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   return (
     <div className="auth-page">
       <div className="auth-container">
         <h2>Register with MedCertichain</h2>
-        <form className="auth-form" onSubmit={handleRegister}>
+        <form className="auth-form" onSubmit={handleSubmit}>
           <label>Select Role</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <select name="role" value={formData.role} onChange={handleChange}>
             <option value="patient">Patient</option>
             <option value="doctor">Doctor</option>
           </select>
-
           <label>Name</label>
           <input
             type="text"
+            name="name"
             placeholder="Enter your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
+            value={formData.name}
+            onChange={handleChange}
           />
-
+          {errors.name && <p className="error">{errors.name}</p>}
           <label>Email</label>
           <input
             type="email"
+            name="email"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            value={formData.email}
+            onChange={handleChange}
           />
-
+          {errors.email && <p className="error">{errors.email}</p>}
           <label>Password</label>
           <input
             type="password"
-            placeholder="Create a password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            name="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={handleChange}
           />
-
-          {role === 'doctor' && (
+          {errors.password && <p className="error">{errors.password}</p>}
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm your password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+          {formData.role === 'doctor' && (
             <>
               <label>Medical License Number</label>
               <input
                 type="text"
+                name="licenseNumber"
                 placeholder="Enter your medical license number"
-                value={licenseNumber}
-                onChange={(e) => setLicenseNumber(e.target.value)}
-                required
+                value={formData.licenseNumber}
+                onChange={handleChange}
               />
-
-              <label>Specialization</label>
-              <input
-                type="text"
-                placeholder="Enter your specialization (e.g., Cardiology)"
-                value={specialization}
-                onChange={(e) => setSpecialization(e.target.value)}
-                required
-              />
-
-              <label>Hospital Affiliation</label>
-              <input
-                type="text"
-                placeholder="Enter your hospital name"
-                value={hospital}
-                onChange={(e) => setHospital(e.target.value)}
-                required
-              />
+              {errors.licenseNumber && <p className="error">{errors.licenseNumber}</p>}
             </>
           )}
-
           <button type="submit" className="btn">Register</button>
         </form>
         <p>

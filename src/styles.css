@@ -7,7 +7,8 @@ body {
     color: #202124; /* Dark gray text */
   }
   
-  .navbar {
+/* Navbar Container */
+.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -16,21 +17,58 @@ body {
     padding: 1rem;
   }
   
+  /* Logo Styling */
   .navbar .logo {
     font-size: 1.8rem;
     font-weight: bold;
+    cursor: pointer; /* Add pointer cursor for interactivity */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
   }
   
+  .navbar .logo:hover {
+    color: #ffeb3b; /* Yellow hover effect for the logo */
+  }
+  
+  /* Navigation Links */
   .nav-links {
     list-style: none;
     display: flex;
     gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    display: inline-block;
   }
   
   .nav-links a {
     color: white;
     text-decoration: none;
     font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 5px; /* Rounded corners for hover effect */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+  }
+  
+  .nav-links a:hover {
+    background-color: #174ea6; /* Darker blue on hover */
+    color: #ffffff; /* Keep text white */
+  }
+  
+
+  
+  /* Welcome Message Styling */
+  .nav-links span {
+    margin-right: 1rem;
+    font-weight: bold;
+    color: #ffffff; /* White text for welcome message */
+    transition: color 0.3s ease;
+  }
+  
+  .nav-links span:hover {
+    color: #ffeb3b; /* Yellow hover effect for the welcome message */
   }
   
   .auth-page {
@@ -322,4 +360,18 @@ body {
   
   .footer-bottom p {
     font-size: 0.9rem;
+  }
+  .logout-btn {
+    background-color: #ff4d4d; /* Red color for logout */
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .logout-btn:hover {
+    background-color: #cc0000; /* Darker red on hover */
   }

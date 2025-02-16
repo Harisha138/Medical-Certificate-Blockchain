@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 
-const DoctorDashboard = () => {
+const DoctorDashboard = ({ doctorName, onLogout }) => {
   const [issuedCertificates, setIssuedCertificates] = useState([]);
   const [formData, setFormData] = useState({
     patientName: '',
     medicalCondition: '',
-    issueDate: '',
-    expiryDate: '',
+    issueDate: '', // Keep issue date for now (can be replaced with blockchain timestamp later)
   });
 
   // Handle form input changes
@@ -27,7 +26,6 @@ const DoctorDashboard = () => {
       patientName: '',
       medicalCondition: '',
       issueDate: '',
-      expiryDate: '',
     });
     alert('Medical certificate issued successfully!');
   };
@@ -36,7 +34,9 @@ const DoctorDashboard = () => {
   const handleVerifyCertificate = (id) => {
     const certificate = issuedCertificates.find((cert) => cert.id === id);
     if (certificate) {
-      alert(`Certificate Verified:\nPatient: ${certificate.patientName}\nCondition: ${certificate.medicalCondition}`);
+      alert(
+        `Certificate Verified:\nPatient: ${certificate.patientName}\nCondition: ${certificate.medicalCondition}\nIssue Date: ${certificate.issueDate}`
+      );
     } else {
       alert('Certificate not found.');
     }
@@ -45,7 +45,8 @@ const DoctorDashboard = () => {
   return (
     <div className="dashboard">
       <h2>Doctor Dashboard</h2>
-      <p>Welcome, Dr. Smith!</p>
+      <p>Welcome, Dr. {doctorName}!</p>
+
 
       {/* Issue Certificate Form */}
       <form onSubmit={handleIssueCertificate} className="dashboard-form">
@@ -79,14 +80,14 @@ const DoctorDashboard = () => {
           required
         />
 
-        <label>Expiry Date</label>
-        <input
-          type="date"
-          name="expiryDate"
-          value={formData.expiryDate}
-          onChange={handleChange}
-          required
-        />
+<label>Expiry Date</label>
+<input
+type="date"
+name="expiryDate"
+value={formData.expiryDate}
+onChange={handleChange}
+required
+/>
 
         <button type="submit" className="btn">Issue Certificate</button>
       </form>
@@ -100,8 +101,7 @@ const DoctorDashboard = () => {
               <li key={cert.id}>
                 <strong>Patient:</strong> {cert.patientName},{' '}
                 <strong>Condition:</strong> {cert.medicalCondition},{' '}
-                <strong>Issue Date:</strong> {cert.issueDate},{' '}
-                <strong>Expiry Date:</strong> {cert.expiryDate}
+                <strong>Issue Date:</strong> {cert.issueDate}
                 <button
                   className="btn verify-btn"
                   onClick={() => handleVerifyCertificate(cert.id)}

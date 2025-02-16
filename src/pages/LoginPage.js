@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage = ({ users, onLogin }) => {
   const [role, setRole] = useState('patient'); // Default role is patient
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,12 +10,17 @@ const LoginPage = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (role === 'patient') {
-      navigate('/patient-dashboard');
-    } else if (role === 'doctor') {
-      navigate('/doctor-dashboard');
+    const user = users.find((u) => u.email === email && u.password === password);
+    if (user) {
+      onLogin(email, password); // Notify App.js of successful login
+      if (user.role === 'patient') {
+        navigate('/patient-dashboard');
+      } else if (user.role === 'doctor') {
+        navigate('/doctor-dashboard');
+      }
+    } else {
+      alert('Invalid email or password');
     }
-    alert(`Logged in as ${role}`);
   };
 
   return (
@@ -28,7 +33,6 @@ const LoginPage = () => {
             <option value="patient">Patient</option>
             <option value="doctor">Doctor</option>
           </select>
-
           <label>Email</label>
           <input
             type="email"
@@ -37,7 +41,6 @@ const LoginPage = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-
           <label>Password</label>
           <input
             type="password"
@@ -46,7 +49,6 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-
           {role === 'doctor' && (
             <>
               <label>Medical License Number</label>
@@ -59,7 +61,6 @@ const LoginPage = () => {
               />
             </>
           )}
-
           <button type="submit" className="btn">Login</button>
         </form>
         <p>
